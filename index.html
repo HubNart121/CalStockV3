@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Master Pro V11 - Optimize Display</title>
+    <title>Stock Master Pro V13 - Final Polish</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
@@ -54,15 +54,6 @@
 
         .content { padding: 20px; }
 
-        /* Input Cards */
-        .section-title {
-            font-size: 0.75rem; font-weight: 700; color: #94a3b8;
-            text-transform: uppercase; margin: 20px 0 10px 0;
-            display: flex; align-items: center; letter-spacing: 1px;
-        }
-
-        .section-title::after { content: ""; flex: 1; height: 1px; background: #f1f5f9; margin-left: 10px; }
-
         .input-card {
             background: #ffffff; border: 1.5px solid #f1f5f9; border-radius: 16px;
             padding: 10px 15px; margin-bottom: 10px;
@@ -76,13 +67,39 @@
             font-family: 'Inter', sans-serif; outline: none;
         }
 
-        /* Average Table */
-        .buy-table { width: 100%; border-collapse: collapse; }
-        .buy-table th { text-align: left; font-size: 0.65rem; color: #94a3b8; padding: 8px 5px; }
+        /* สำหรับช่องที่มีสัญลักษณ์ ฿ นำหน้า */
+        .input-with-symbol {
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        /* Table Styling */
+        .buy-table { width: 100%; border-collapse: separate; border-spacing: 0 6px; table-layout: fixed; }
+        .buy-table th { text-align: left; font-size: 0.6rem; color: #94a3b8; padding: 0 4px; text-transform: uppercase; }
         
-        .row-box { background: #f8fafc; border-radius: 10px; padding: 6px 10px; display: flex; align-items: center; }
-        .row-box input { font-size: 0.9rem; }
+        .row-box { 
+            background: #f8fafc; 
+            border-radius: 10px; 
+            padding: 8px; 
+            display: flex; 
+            align-items: center;
+        }
         
+        .row-box input { font-size: 0.85rem; width: 100%; }
+        
+        .row-total-display {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            text-align: right;
+            padding-right: 5px;
+        }
+
         .btn-add {
             width: 100%; padding: 12px; background: #f5f3ff; color: var(--secondary);
             border: 2px dashed #ddd6fe; border-radius: 14px; cursor: pointer;
@@ -101,10 +118,7 @@
         /* Summary Grid */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .summary-box { background: #ffffff; border: 1.5px solid #f1f5f9; border-radius: 16px; padding: 12px; overflow: hidden; }
-        .val-text { 
-            font-size: 1.1rem; font-weight: 700; font-family: 'Inter', sans-serif; 
-            display: block; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
+        .val-text { font-size: 1.1rem; font-weight: 700; font-family: 'Inter', sans-serif; display: block; margin-top: 3px; white-space: nowrap; }
 
         /* Final Result Card */
         .profit-card {
@@ -113,29 +127,13 @@
             min-height: 120px; display: flex; flex-direction: column; justify-content: center;
         }
 
-        .profit-card .amount { 
-            font-size: 2.5rem; /* Base size */
-            font-weight: 800; color: var(--primary); 
-            font-family: 'Inter', sans-serif; line-height: 1.1; margin: 8px 0;
-            word-break: break-all;
-            transition: font-size 0.2s;
-        }
-        
+        .profit-card .amount { font-size: 2.5rem; font-weight: 800; color: var(--primary); font-family: 'Inter', sans-serif; line-height: 1.1; margin: 8px 0; }
         .amount.negative { color: var(--danger); }
-
-        .badge {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.15); color: var(--primary);
-            padding: 5px 15px; border-radius: 100px; font-size: 0.85rem; font-weight: 700;
-        }
+        .badge { display: inline-block; background: rgba(16, 185, 129, 0.15); color: var(--primary); padding: 5px 15px; border-radius: 100px; font-size: 0.85rem; font-weight: 700; }
         .badge.negative { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
 
-        /* Buttons */
         .controls { width: 100%; max-width: 480px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .btn {
-            padding: 15px; border-radius: 16px; border: none; font-weight: 700; cursor: pointer;
-            font-size: 0.95rem;
-        }
+        .btn { padding: 15px; border-radius: 16px; border: none; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
         .btn-main { background: var(--dark); color: white; grid-column: span 2; }
         .btn-save { background: var(--primary); color: white; }
 
@@ -162,19 +160,20 @@
                     <input type="text" id="stockName" value="KTC" oninput="updateUI()">
                 </div>
                 <div class="input-card">
-                    <span class="label">วันที่คำนวณ</span>
+                    <span class="label">วันที่</span>
                     <input type="date" id="calcDate" oninput="updateUI()">
                 </div>
             </div>
 
-            <div class="section-title">รายการซื้อสะสม</div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin: 15px 0 5px 0;">รายการซื้อสะสม</div>
             <table class="buy-table">
                 <thead>
                     <tr>
                         <th style="width: 25px;">#</th>
-                        <th>ราคาซื้อ (฿)</th>
-                        <th>จำนวนหุ้น</th>
-                        <th style="width: 30px;"></th>
+                        <th style="width: 28%;">ราคา (฿)</th>
+                        <th style="width: 28%;">หุ้น</th>
+                        <th style="width: 34%; text-align: right;">เงินรวม (฿)</th>
+                        <th style="width: 25px;"></th>
                     </tr>
                 </thead>
                 <tbody id="buy-rows"></tbody>
@@ -184,12 +183,14 @@
             <div class="div-card">
                 <div class="div-grid">
                     <div>
-                        <span class="label" style="color:#9a3412">ปันผลต่อหุ้น (DPS)</span>
-                        <input type="number" id="divPerShare" value="1.77" step="0.01" oninput="updateUI()" style="color:#c2410c; font-size: 1.3rem;">
+                        <span class="label" style="color:#9a3412">ปันผลต่อหุ้น</span>
+                        <div class="input-with-symbol" style="color:#c2410c;">
+                            <span>฿</span><input type="number" id="divPerShare" value="1.77" step="0.01" oninput="updateUI()" style="color:#c2410c; font-size: 1.3rem;">
+                        </div>
                     </div>
                     <div style="text-align: right;">
-                        <span class="label">Dividend Yield</span>
-                        <div class="div-val" id="disp-divYield" style="font-size: 1.3rem;">4.64%</div>
+                        <span class="label">Div. Yield</span>
+                        <div class="div-val" id="disp-divYield" style="font-size: 1.3rem;">0.00%</div>
                     </div>
                 </div>
                 <div style="margin-top: 10px; border-top: 1.5px dashed #fed7aa; padding-top: 8px; display: flex; justify-content: space-between; align-items: center;">
@@ -198,7 +199,6 @@
                 </div>
             </div>
 
-            <div class="section-title">สรุปภาพรวม</div>
             <div class="grid-2" style="margin-bottom: 10px;">
                 <div class="summary-box">
                     <span class="label">ต้นทุนเฉลี่ย</span>
@@ -206,12 +206,14 @@
                 </div>
                 <div class="summary-box">
                     <span class="label">ราคาขายเป้าหมาย</span>
-                    <input type="number" id="sellPrice" value="35.00" oninput="updateUI()" style="margin-top:2px;">
+                    <div class="input-with-symbol">
+                        <span>฿</span><input type="number" id="sellPrice" value="35.00" oninput="updateUI()" style="margin-top:0;">
+                    </div>
                 </div>
             </div>
             <div class="grid-2">
                 <div class="summary-box">
-                    <span class="label">จำนวนหุ้นรวม</span>
+                    <span class="label">หุ้นรวม</span>
                     <span class="val-text" id="disp-totalVol">0</span>
                 </div>
                 <div class="summary-box">
@@ -221,11 +223,9 @@
             </div>
 
             <div class="profit-card">
-                <span class="label" style="color:rgba(255,255,255,0.5)">กำไรสุทธิคาดการณ์ (หักค่าธรรมเนียม)</span>
+                <span class="label" style="color:rgba(255,255,255,0.5)">กำไรสุทธิคาดการณ์</span>
                 <div class="amount" id="disp-netProfit">฿0</div>
-                <div>
-                    <span class="badge" id="disp-margin">Margin: 0%</span>
-                </div>
+                <div><span class="badge" id="disp-margin">Margin: 0%</span></div>
             </div>
         </div>
     </div>
@@ -241,10 +241,11 @@
             const rowCount = tbody.rows.length + 1;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td style="text-align:center; color:#94a3b8; font-weight:bold; font-size:0.75rem;">${rowCount}</td>
+                <td style="text-align:center; color:#94a3b8; font-weight:bold; font-size:0.7rem;">${rowCount}</td>
                 <td><div class="row-box"><input type="number" class="row-price" value="${p}" step="0.01" oninput="updateUI()"></div></td>
                 <td><div class="row-box"><input type="number" class="row-vol" value="${v}" oninput="updateUI()"></div></td>
-                <td style="text-align:right;"><button class="delete-row" onclick="this.parentElement.parentElement.remove(); updateUI();" style="border:none; background:none; color:#ef4444; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+                <td><div class="row-total-display">0</div></td>
+                <td style="text-align:right;"><button class="delete-row" onclick="this.parentElement.parentElement.remove(); updateUI();" style="border:none; background:none; color:#ef4444; cursor:pointer; font-size:1.5rem;">&times;</button></td>
             `;
             tbody.appendChild(tr);
             updateUI();
@@ -254,55 +255,43 @@
             const name = document.getElementById('stockName').value || 'STOCK';
             const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
             const divPerShare = parseFloat(document.getElementById('divPerShare').value) || 0;
-
             const priceInputs = document.querySelectorAll('.row-price');
             const volInputs = document.querySelectorAll('.row-vol');
+            const rowTotals = document.querySelectorAll('.row-total-display');
             
-            let totalVol = 0;
-            let totalInvest = 0;
-
+            let totalVol = 0, totalInvest = 0;
             priceInputs.forEach((input, i) => {
                 const p = parseFloat(input.value) || 0;
                 const v = parseFloat(volInputs[i].value) || 0;
+                const subTotal = p * v;
                 totalVol += v;
-                totalInvest += (p * v);
+                totalInvest += subTotal;
+                rowTotals[i].innerText = subTotal.toLocaleString();
             });
 
             const avgPrice = totalVol > 0 ? totalInvest / totalVol : 0;
             const totalSellValue = sellPrice * totalVol;
-            const buyFees = totalInvest * 0.0015;
-            const sellFees = totalSellValue * 0.0015;
-            const netProfit = (totalSellValue - totalInvest) - (buyFees + sellFees);
-            
+            const netProfit = (totalSellValue - totalInvest) - ((totalInvest + totalSellValue) * 0.0015);
             const margin = totalInvest > 0 ? (netProfit / totalInvest) * 100 : 0;
             const totalDiv = divPerShare * totalVol;
             const divYield = avgPrice > 0 ? (divPerShare / avgPrice) * 100 : 0;
 
-            // UI Elements
             document.getElementById('disp-stock').innerText = name.toUpperCase();
             document.getElementById('disp-totalVol').innerText = totalVol.toLocaleString();
             document.getElementById('disp-avgPrice').innerText = '฿' + avgPrice.toFixed(2);
             document.getElementById('disp-totalInvest').innerText = '฿' + Math.floor(totalInvest).toLocaleString();
             
-            // Profit Display with Scaling
             const profitEl = document.getElementById('disp-netProfit');
             const marginEl = document.getElementById('disp-margin');
             const profitText = (netProfit >= 0 ? '฿' : '-฿') + Math.abs(Math.floor(netProfit)).toLocaleString();
             profitEl.innerText = profitText;
             
-            // Auto Scale Font
             if (profitText.length > 10) profitEl.style.fontSize = "1.8rem";
             else if (profitText.length > 8) profitEl.style.fontSize = "2.1rem";
             else profitEl.style.fontSize = "2.5rem";
 
-            // Color Logic
-            if (netProfit < 0) {
-                profitEl.classList.add('negative');
-                marginEl.classList.add('negative');
-            } else {
-                profitEl.classList.remove('negative');
-                marginEl.classList.remove('negative');
-            }
+            if (netProfit < 0) { profitEl.classList.add('negative'); marginEl.classList.add('negative'); }
+            else { profitEl.classList.remove('negative'); marginEl.classList.remove('negative'); }
 
             document.getElementById('disp-margin').innerText = 'Margin: ' + margin.toFixed(2) + '%';
             document.getElementById('disp-totalDiv').innerText = '฿' + Math.floor(totalDiv).toLocaleString();
